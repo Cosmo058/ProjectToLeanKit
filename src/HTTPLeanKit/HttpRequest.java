@@ -1,5 +1,5 @@
 
-package projecttoleankit.HTTP;
+package HTTPLeanKit;
 
 import java.io.IOException;
 import java.io.InputStream;

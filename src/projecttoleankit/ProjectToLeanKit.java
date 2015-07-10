@@ -1,20 +1,29 @@
 package projecttoleankit;
 
-import projecttoleankit.HTTP.HttpRequest;
+import HTTPLeanKit.HttpRequest;
+import MPPHandler.MppH;
+import MPPHandler.MpxjFilter;
+import net.sf.mpxj.MPXJException;
 /**
  *
  * @author angel
  */
 public class ProjectToLeanKit {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        HttpRequest hr = new HttpRequest();
+    public static void main(String[] args) throws MPXJException{
+        String filename = "sus.mpp";
+        ClassLoader loader = ProjectToLeanKit.class.getClassLoader();
+        String path = loader.getResource("projecttoleankit/files/").toString();
+        path = path.substring(6);
+        System.out.println(path);
         
-        hr.LeanRequest("unam117","214470572","GetBoardIdentifiers");
-        // TODO code application logic here
+        HttpRequest hr = new HttpRequest();
+        //hr.LeanRequest("unam117","214470572","GetBoardIdentifiers");
+        
+        MppH mp = new MppH();
+        mp.readMPP("sus.mpp");
+                
+        MpxjFilter mf = new MpxjFilter();
+        //mf.filtros(path+filename,"XD");
     }
     
 }
