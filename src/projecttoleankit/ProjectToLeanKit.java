@@ -16,10 +16,11 @@ public class ProjectToLeanKit {
         
         HttpRequest hr = new HttpRequest();
         JSONObject jObj = hr.LeanRequest("cosmodev","225790183","GetBoardIdentifiers");
-        int spacesToIndentEachLevel = 2;
+        
+        //int spacesToIndentEachLevel = 2;
         //System.out.println("\n\nJSON Obj:\n"+jObj.toString(spacesToIndentEachLevel));
         
-        JsonManager.JsonIter(jObj,"ReplyData");
+        //JsonManager.JsonIter(jObj,"BoardUsers");
         
         MppH mp = new MppH();
         mp.readMPP(filename);
