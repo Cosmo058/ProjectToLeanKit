@@ -1,15 +1,9 @@
 package projecttoleankit;
 
-import java.util.Iterator;
-import java.util.List;
-import net.sf.mpxj.Column;
 import net.sf.mpxj.MPXJException;
 import net.sf.mpxj.ProjectFile;
-import net.sf.mpxj.Resource;
-import net.sf.mpxj.Table;
 import net.sf.mpxj.Task;
 import net.sf.mpxj.mpp.MPPReader;
-
 /**
  *
  * @author Angel
@@ -25,80 +19,32 @@ public class MppH {
         MPPReader reader = new MPPReader();
         ProjectFile project = reader.read(path+filename);
         
-        for (Resource resource : project.getAllResources()){
-            //System.out.println("Resource: " + resource.getName() + " (Unique ID=" + resource.getUniqueID() + ")");
-        }
-        
         System.out.print("\n\n\n");
         for (Task task : project.getAllTasks()){
             //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),task.getType());
         }
         
         System.out.print("\n\n\n");
-        listHierarchy(project);
-        
-        /*
-        try{
-            ProjectFile mpp = reader.read(path+filename);
-
-            List tables = mpp.getTables();
-            Iterator iter = tables.iterator();
-            while (iter.hasNext()){
-                Table table = (Table)iter.next();
-                
-                if (table.getResourceFlag()){
-                    List resources = mpp.getAllResources();
-                    Iterator resourceIter = resources.iterator();
-                    while (resourceIter.hasNext()){
-                        Resource resource = (Resource)iter.next();
-                        List columns = table.getColumns();
-                        Iterator columnIter = columns.iterator();
-                        while (columnIter.hasNext()){
-                            Column column = (Column)columnIter.next();
-                            Object columnValue = resource.getCachedValue(column.getFieldType());
-                            System.out.print(columnValue);
-                            System.out.print(",");
-                        }
-                        System.out.println("");
-                    }
-                }else{
-                    List tasks = mpp.getAllTasks();
-                    Iterator taskIter = tasks.iterator();
-                    
-                    while(taskIter.hasNext()){
-                        Task task = (Task)iter.next();
-                        List columns = table.getColumns();
-                        Iterator columnIter = columns.iterator();
-                        while(columnIter.hasNext()){
-                            Column column = (Column)columnIter.next();
-                            Object columnValue = task.getCachedValue(column.getFieldType());
-                            System.out.print(columnValue);
-                            System.out.print(",");
-                        }
-                        System.out.println("");
-                    }
-                }
-            }
-            //return Json(new { data = "success" }, JsonRequestBehavior.AllowGet);
-        }catch(Exception e){
-            e.printStackTrace();
-            //return Json(new { data = "error" }, JsonRequestBehavior.AllowGet);
-        }
-        */
+        listHierarchy(project,0,"");
     }
     
-    public void listHierarchy(ProjectFile file){
+    public void listHierarchy(ProjectFile file,int level,String trace){
         for (Task task : file.getChildTasks()){
-            System.out.println("Task: " + task.getName());
-            listHierarchy(task, "\t");
+            System.out.println(""+level+" Task: " + task.getName());
+            listHierarchy(task, "\t",level+1,"");
         }
         System.out.println();
     }
 
-    private void listHierarchy(Task task, String indent){
+    private void listHierarchy(Task task, String indent,int level, String trace){
+        int contTareasHijas=0;
         for (Task child : task.getChildTasks()){
-            System.out.println(indent + "Task: " + child.getName());
-            listHierarchy(child, indent + "\t");
+            if(trace!="") trace = trace+":"+task.getName();
+            else trace = trace+task.getName();
+            System.out.println(indent +""+level+" Task: " + child.getName()+"   Trace: "+trace);
+            contTareasHijas++;
+            listHierarchy(child, indent + "\t",level+1,trace);
         }
+        if (contTareasHijas==0) System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja'");
     }
 }
