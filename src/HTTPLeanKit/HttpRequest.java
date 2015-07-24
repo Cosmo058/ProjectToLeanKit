@@ -9,13 +9,14 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 
 public class HttpRequest {
-    public static void LeanRequest(String domain, String boardID,String action){
+    public static JSONObject LeanRequest(String domain, String boardID,String action){
         try {
             String webPage = "https://"+domain+".leankit.com/kanban/api/board/"+boardID+"/"+action;
-            String name = "angelsanchez058@gmail.com";
-            String password = "@LeanKit058.";
+            String name = "cosmodevtest@gmail.com";
+            String password = "CosmoTest";
 
             String authString = name + ":" + password;
             System.out.println("auth string: " + authString);
@@ -40,10 +41,16 @@ public class HttpRequest {
             System.out.println("*** BEGIN ***");
             System.out.println(result);
             System.out.println("*** END ***");
+            
+            JSONObject jsonObj = new JSONObject(sb.toString());
+            return jsonObj;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        JSONObject jsonObj = new JSONObject("");
+        return jsonObj;
     }
 }

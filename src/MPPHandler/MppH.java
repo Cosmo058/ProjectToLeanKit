@@ -26,12 +26,16 @@ public class MppH {
         ProjectFile project = reader.read(path+filename);
         
         for (Resource resource : project.getAllResources()){
-            System.out.println("Resource: " + resource.getName() + " (Unique ID=" + resource.getUniqueID() + ")");
+            //System.out.println("Resource: " + resource.getName() + " (Unique ID=" + resource.getUniqueID() + ")");
         }
         
+        System.out.print("\n\n\n");
         for (Task task : project.getAllTasks()){
-            System.out.println("Task: " + task.getName() + " ID=" + task.getID() + " Unique ID=" + task.getUniqueID() + " Parent Task="+task.getParentTask() + " Task Type: "+task.getType());
+            //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),task.getType());
         }
+        
+        System.out.print("\n\n\n");
+        listHierarchy(project);
         
         /*
         try{
@@ -81,5 +85,20 @@ public class MppH {
             //return Json(new { data = "error" }, JsonRequestBehavior.AllowGet);
         }
         */
+    }
+    
+    public void listHierarchy(ProjectFile file){
+        for (Task task : file.getChildTasks()){
+            System.out.println("Task: " + task.getName());
+            listHierarchy(task, "\t");
+        }
+        System.out.println();
+    }
+
+    private void listHierarchy(Task task, String indent){
+        for (Task child : task.getChildTasks()){
+            System.out.println(indent + "Task: " + child.getName());
+            listHierarchy(child, indent + "\t");
+        }
     }
 }
