@@ -1,5 +1,7 @@
 package projecttoleankit;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.sf.mpxj.MPXJException;
 import net.sf.mpxj.ProjectFile;
 import net.sf.mpxj.Task;
@@ -9,7 +11,10 @@ import net.sf.mpxj.mpp.MPPReader;
  * @author Angel
  */
 public class MppH {
-    public void readMPP(String filename) throws MPXJException{
+    
+    Map tareasHijas = new HashMap();
+    
+    public Map readMPP(String filename) throws MPXJException{
         ClassLoader loader = MppH.class.getClassLoader();
         String path = loader.getResource("MPPHandler/../projecttoleankit/files/").toString();
         path = path.substring(6);
@@ -25,7 +30,9 @@ public class MppH {
         }
         
         System.out.print("\n\n\n");
-        listHierarchy(project,0,"");
+        listHierarchy(project,0,""); //listHierarchy(projectFile,level,trace);
+        
+        return tareasHijas;
     }
     
     public void listHierarchy(ProjectFile file,int level,String trace){
@@ -46,7 +53,13 @@ public class MppH {
             childFound = listHierarchy(child, indent + "\t",level+1,trace);
         }
         
-        if (contTareasHijas==0) System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+trace);
+        if (contTareasHijas==0){
+            String tmp = trace.toLowerCase();
+            tmp = tmp.substring(tmp.indexOf(':')+1);
+            tmp = tmp.substring(tmp.indexOf(':')+1);
+            System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
+            tareasHijas.put(tmp,task);
+        }
         return 1;
     }
 }

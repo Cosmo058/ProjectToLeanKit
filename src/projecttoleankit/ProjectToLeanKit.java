@@ -1,6 +1,11 @@
 package projecttoleankit;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import net.sf.mpxj.MPXJException;
+import net.sf.mpxj.Task;
 import org.json.JSONObject;
 /**
  *
@@ -14,16 +19,36 @@ public class ProjectToLeanKit {
         path = path.substring(6);
         System.out.println(path);
         
-        HttpRequest hr = new HttpRequest();
-        //JSONObject jObj = hr.LeanRequest("cosmodev","225790183","GetBoardIdentifiers");
+        JSONObject jObj = HttpRequest.LeanRequest("cosmodev","225790183","GetBoardIdentifiers");
+        Map lanesFromHttp = JsonManager.JsonIter(jObj,"Lanes");
+        System.out.println("Total de lanes: "+lanesFromHttp.size());
         
-        //int spacesToIndentEachLevel = 2;
-        //System.out.println("\n\nJSON Obj:\n"+jObj.toString(spacesToIndentEachLevel));
-        
-        //JsonManager.JsonIter(jObj,"BoardUsers");
         
         MppH mp = new MppH();
-        mp.readMPP(filename);
+        Map tareasHijas = mp.readMPP(filename);
+        System.out.println("Total de tareas hijas: "+tareasHijas.size()+"\n\n");
+        
+        
+        Map tareasALean = new HashMap();
+        
+        Iterator iterator = tareasHijas.entrySet().iterator();
+        int k=0,j=0;
+	while (iterator.hasNext()) {
+            Map.Entry mapEntry = (Map.Entry) iterator.next();
+            System.out.println("The key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
+            
+            if(lanesFromHttp.containsKey(mapEntry.getKey())){
+                System.out.println("Found in IF statment: "+j+++"\n");
+                Map lane = (Map)lanesFromHttp.get(mapEntry.getKey());
+                Task task = (Task)mapEntry.getValue();
+                Map LaneTask = new HashMap();
+                LaneTask.put(lane.get("Id"),task);
+                tareasALean.put(task.getID(),LaneTask);
+            }
+	}
+        
+        System.out.println("Tareas a Lean: "+tareasALean.size());
+        
+        //@TODO HttpRequest.LeanRequest("cosmodev","225790183","AddCards");
     }
-    
 }
