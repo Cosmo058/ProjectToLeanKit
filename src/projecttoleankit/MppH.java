@@ -36,15 +36,17 @@ public class MppH {
         System.out.println();
     }
 
-    private void listHierarchy(Task task, String indent,int level, String trace){
-        int contTareasHijas=0;
+    private int listHierarchy(Task task, String indent,int level, String trace){
+        int contTareasHijas=0, childFound=0;
         for (Task child : task.getChildTasks()){
-            if(trace!="") trace = trace+":"+task.getName();
-            else trace = trace+task.getName();
-            System.out.println(indent +""+level+" Task: " + child.getName()+"   Trace: "+trace);
+            if(trace!="" && childFound==0) trace = trace+":"+task.getName();
+            if(trace=="" && childFound==0) trace = trace+task.getName();
+            System.out.println(indent +""+level+" Task: " + child.getName());
             contTareasHijas++;
-            listHierarchy(child, indent + "\t",level+1,trace);
+            childFound = listHierarchy(child, indent + "\t",level+1,trace);
         }
-        if (contTareasHijas==0) System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja'");
+        
+        if (contTareasHijas==0) System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+trace);
+        return 1;
     }
 }

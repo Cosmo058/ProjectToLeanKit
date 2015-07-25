@@ -15,7 +15,7 @@ public class ProjectToLeanKit {
         System.out.println(path);
         
         HttpRequest hr = new HttpRequest();
-        JSONObject jObj = hr.LeanRequest("cosmodev","225790183","GetBoardIdentifiers");
+        //JSONObject jObj = hr.LeanRequest("cosmodev","225790183","GetBoardIdentifiers");
         
         //int spacesToIndentEachLevel = 2;
         //System.out.println("\n\nJSON Obj:\n"+jObj.toString(spacesToIndentEachLevel));
