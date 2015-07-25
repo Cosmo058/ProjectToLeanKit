@@ -13,13 +13,15 @@ import org.json.JSONObject;
  */
 public class ProjectToLeanKit {
     public static void main(String[] args) throws MPXJException, Exception{
+        
+        HttpRequest hr = new HttpRequest();
         String filename = "sgd.mpp";
         ClassLoader loader = ProjectToLeanKit.class.getClassLoader();
         String path = loader.getResource("projecttoleankit/files/").toString();
         path = path.substring(6);
         System.out.println(path);
         
-        JSONObject jObj = HttpRequest.LeanRequest("cosmodev","225790183","GetBoardIdentifiers");
+        JSONObject jObj = HttpRequest.sendGet("cosmodev","225790183","GetBoardIdentifiers");
         Map lanesFromHttp = JsonManager.JsonIter(jObj,"Lanes");
         System.out.println("Total de lanes: "+lanesFromHttp.size());
         
@@ -49,6 +51,6 @@ public class ProjectToLeanKit {
         
         System.out.println("Tareas a Lean: "+tareasALean.size());
         
-        //@TODO HttpRequest.LeanRequest("cosmodev","225790183","AddCards");
+        //hr.sendPost("cosmodev","225790183","AddCards?wipOverrideComment={comment}");
     }
 }

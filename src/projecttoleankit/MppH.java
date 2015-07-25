@@ -57,7 +57,7 @@ public class MppH {
             String tmp = trace.toLowerCase();
             tmp = tmp.substring(tmp.indexOf(':')+1);
             tmp = tmp.substring(tmp.indexOf(':')+1);
-            System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
+            //System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
             tareasHijas.put(tmp,task);
         }
         return 1;
