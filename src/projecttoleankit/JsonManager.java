@@ -16,7 +16,7 @@ public class JsonManager {
         JSONObject lanesObject = jsonArray1.getJSONObject(0);
         JSONArray jsonArray = lanesObject.getJSONArray(dataToShow);
         
-        System.out.println("LanesLength: "+jsonArray.length());
+        //System.out.println("LanesLength: "+jsonArray.length());
         
         for (int i = 0, size = jsonArray.length(); i < size; i++){
             JSONObject objectInArray = jsonArray.getJSONObject(i);
@@ -24,11 +24,11 @@ public class JsonManager {
             Map lane = new HashMap();
             
             String[] elementNames = JSONObject.getNames(objectInArray);
-            System.out.printf("%d ELEMENTS IN CURRENT OBJECT:\n", elementNames.length);
+            //System.out.printf("%d ELEMENTS IN CURRENT OBJECT:\n", elementNames.length);
             for (String elementName : elementNames){
                 //Setear los atributos de cada Lane
                 String value = ""+objectInArray.get(elementName);
-                System.out.printf("name=%s, value=%s\n", elementName, value);
+                //System.out.printf("name=%s, value=%s\n", elementName, value);
                 lane.put(elementName,objectInArray.get(elementName));
             }
             

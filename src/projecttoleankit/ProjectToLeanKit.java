@@ -40,18 +40,21 @@ public class ProjectToLeanKit {
 	while (iterator.hasNext()) {
             JSONObject card = new JSONObject();
             Map.Entry mapEntry = (Map.Entry) iterator.next();
-            System.out.println("The key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
+            //System.out.println("The key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
             
             if(lanesFromHttp.containsKey(mapEntry.getKey())){
-                System.out.println("Found in IF statment: "+j+++"\n");
+                //System.out.println("Found in IF statment: "+j+++"\n");
                 Map lane = (Map)lanesFromHttp.get(mapEntry.getKey());
                 Task task = (Task)mapEntry.getValue();
                 Map LaneTask = new HashMap();
                 LaneTask.put(lane.get("Id"),task);
                 tareasALean.put(task.getID(),LaneTask);
                 
+                System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),task.getType());
+                
                 card.put("LaneId",lane.get("Id"));
                 card.put("Title",task.getName());
+                card.put("Description","");
                         
                 cards.put(card);
             }
