@@ -13,10 +13,11 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class HttpRequest {
-    public static JSONObject sendGet(String domain, String boardID,String action){
+    public JSONObject sendGet(String domain, String boardID,String action){
         try {
             String webPage = "https://"+domain+".leankit.com/kanban/api/board/"+boardID+"/"+action;
             String name = "cosmodevtest@gmail.com";
@@ -58,7 +59,50 @@ public class HttpRequest {
         return jsonObj;
     }
     
-    public JSONObject sendPost(String domain, String boardID,String action,Map tareasALean) throws Exception {
+    public JSONObject sendPost(String domain, String boardID,String action,JSONArray jsonArray) throws Exception {
+        
+        String url ="";
+                
+        if(!action.equals(""))
+            url = "https://"+domain+".leankit.com/kanban/api/board/"+boardID+"/"+action;
+        
+        URL obj = new URL(url);
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Accept", "application/json");
+        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        con.addRequestProperty("User-Agent","LeanKit API");
+
+        String urlParameters = jsonArray.toString();
+
+        // Send post request
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();        
+        
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //print result
+        //System.out.println(response.toString());
+        
+        JSONObject jsonObj = new JSONObject(response.toString());
+        
+        return jsonObj;
+    }
+    
+    public JSONObject sendPost(String domain, String boardID,String action,JSONObject jsonObject) throws Exception {
         JSONObject J_obj = new JSONObject();
         
         String key ="nrIJgvSMlA";

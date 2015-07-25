@@ -7,14 +7,14 @@ import org.json.JSONObject;
 
 
 public class JsonManager {
-    public static Map JsonIter(JSONObject JObject,String array) throws Exception{
+    public static Map JsonIter(JSONObject JObject,String dataToShow) throws Exception{
         Map lanesFromHttp = new HashMap();
         
         //arrays values: "Lanes","ClassesOfService","LaneClassType","BoardId"
         //               "LaneType","Prorities","BoardUsers","BoardStatistics","CardTypes"
         JSONArray jsonArray1 = JObject.getJSONArray("ReplyData");
         JSONObject lanesObject = jsonArray1.getJSONObject(0);
-        JSONArray jsonArray = lanesObject.getJSONArray(array);
+        JSONArray jsonArray = lanesObject.getJSONArray(dataToShow);
         
         System.out.println("LanesLength: "+jsonArray.length());
         
