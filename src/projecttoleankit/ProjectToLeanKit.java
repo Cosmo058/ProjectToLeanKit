@@ -1,9 +1,5 @@
 package projecttoleankit;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,15 +31,15 @@ public class ProjectToLeanKit {
         
         HttpRequest hr = new HttpRequest();
         JSONObject jObj = hr.sendGet(domain,boardId,"GetBoardIdentifiers");
-        Map lanesFromHttp = JsonManager.JsonIter(jObj,"Lanes");
+        Map lanesFromHttp = JsonManager.distincGetLanes(jObj,"Lanes");
         System.out.println("Total de lanes: "+lanesFromHttp.size());
         
-        Map cardTypesFromHttp = JsonManager.JsonIter(jObj,"CardTypes");
-        System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
+        Map cardTypesFromHttp = JsonManager.getLanes(jObj,"CardTypes");
+        //System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
         
         Map CardType =(Map)cardTypesFromHttp.get("Other Work");
         int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
-        System.out.println("OtherWorkID: "+OtherWorkID);
+        //System.out.println("OtherWorkID: "+OtherWorkID);
         
         
         Map tareasALean = new HashMap();
@@ -78,12 +74,12 @@ public class ProjectToLeanKit {
             }
 	}
         
-        System.out.println("Tareas a Lean: "+tareasALean.size());
+        //System.out.println("Tareas a Lean: "+tareasALean.size());
         
-        System.out.println("Cards JSON: "+cards.toString());
+        //System.out.println("Cards JSON: "+cards.toString());
         
         
-        //JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",cards);
-        //System.out.println("AddCardsResponse: "+JsonManager.JSONPrettyPrint(addCardsResponse.toString()));
+        JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",cards);
+        System.out.println("AddCardsResponse: "+JsonManager.JSONPrettyPrint(addCardsResponse.toString()));
     }
 }
