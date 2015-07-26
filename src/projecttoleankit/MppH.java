@@ -16,13 +16,7 @@ public class MppH {
     
     MultiValueMap tareasHijas = new MultiValueMap();
     
-    public Map readMPP(String filename) throws MPXJException{
-        ClassLoader loader = MppH.class.getClassLoader();
-        String path = loader.getResource("MPPHandler/../projecttoleankit/files/").toString();
-        path = path.substring(6);
-        
-        //System.out.println("PATH: "+path);
-        
+    public MultiValueMap readMPP(String path,String filename) throws MPXJException{        
         MPPReader reader = new MPPReader();
         ProjectFile project = reader.read(path+filename);
         
@@ -42,7 +36,7 @@ public class MppH {
             //System.out.println(""+level+" Task: " + task.getName());
             listHierarchy(task, "\t",level+1,"");
         }
-        System.out.println();
+        //System.out.println();
     }
 
     private void listHierarchy(Task task, String indent,int level, String trace){
@@ -53,7 +47,7 @@ public class MppH {
             else trace = trace+task.getName();
             
             trace = Cadenas.remvoverAnidados(trace);
-            System.out.println(indent +""+level+" Task: " + child.getName());
+            //System.out.println(indent +""+level+" Task: " + child.getName());
             contTareasHijas++;
             listHierarchy(child, indent + "\t",level+1,trace);
         }
@@ -62,7 +56,7 @@ public class MppH {
             String tmp = trace.toLowerCase();
             tmp = tmp.substring(tmp.indexOf(':')+1);
             tmp = tmp.substring(tmp.indexOf(':')+1);
-            System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
+            //System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
             tareasHijas.put(tmp,task);
         }
     }

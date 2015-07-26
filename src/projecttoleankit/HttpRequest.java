@@ -26,10 +26,10 @@ public class HttpRequest {
             String password = "CosmoTest";
 
             String authString = name + ":" + password;
-            System.out.println("auth string: " + authString);
+            //System.out.println("auth string: " + authString);
             byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
             String authStringEnc = new String(authEncBytes);
-            System.out.println("Base64 encoded auth string: " + authStringEnc);
+            //System.out.println("Base64 encoded auth string: " + authStringEnc);
 
             URL url = new URL(webPage);
             URLConnection urlConnection = url.openConnection();
@@ -45,10 +45,8 @@ public class HttpRequest {
             }
             String result = sb.toString();
             JSONObject jsonObj = new JSONObject(sb.toString());
-
-            System.out.println("*** BEGIN ***");
+            
             //System.out.println(JsonManager.JSONPrettyPrint(jsonObj.toString()));
-            System.out.println("*** END ***");
             
             return jsonObj;
         } catch (MalformedURLException e) {

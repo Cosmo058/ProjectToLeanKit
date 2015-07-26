@@ -77,13 +77,13 @@ public class JsonManager {
                 else
                     penultimoNivel = laneSuperior;
                 
-                System.out.println("LaneName: "+laneName+" LaneSup: "+laneSuperior+" ultiNiv: "+ultimoNivel+" penNiv:"+penultimoNivel);
+                //System.out.println("LaneName: "+laneName+" LaneSup: "+laneSuperior+" ultiNiv: "+ultimoNivel+" penNiv:"+penultimoNivel);
             }
             
             if(ultimoNivel.equals(penultimoNivel)){
                 //Es un lane anidado
                 lanesFromHttp.put(laneSuperior,lane);
-                System.out.println("Lane repetido");
+                //System.out.println("Lane repetido");
             }else
                 lanesFromHttp.put(lane.get("Name"),lane);
         }

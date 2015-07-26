@@ -1,12 +1,12 @@
 package projecttoleankit;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import net.sf.mpxj.MPXJException;
 import net.sf.mpxj.Task;
+import org.apache.commons.collections4.map.MultiValueMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,11 +21,12 @@ public class ProjectToLeanKit {
         ClassLoader loader = ProjectToLeanKit.class.getClassLoader();
         String path = loader.getResource("projecttoleankit/files/").toString();
         path = path.substring(6);
-        System.out.println(path);
+        //System.out.println("PATH:"+path);
         
         MppH mp = new MppH();
-        Map tareasHijas = mp.readMPP(filename);
+        MultiValueMap tareasHijas = mp.readMPP(path,filename);
         System.out.println("Total de tareas 'hojas': "+tareasHijas.size()+"\n\n");
+        //System.out.println("Treas hijas: "+tareasHijas);
         
         
         HttpRequest hr = new HttpRequest();
@@ -44,24 +45,21 @@ public class ProjectToLeanKit {
         int NormalPriorityID = Integer.parseInt(priority.get("Id").toString());
         
         
-        Map tareasALean = new HashMap();
         List list;
         Iterator iterator = tareasHijas.entrySet().iterator();
         int k=0,j=0;
 	while (iterator.hasNext()) {
-            JSONObject card = new JSONObject();
             Map.Entry mapEntry = (Map.Entry) iterator.next();
             list = (List) tareasHijas.get(mapEntry.getKey()); 
-            //System.out.println("The key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
+            //System.out.println("\n\nThe key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
             
             for (int l = 0; l < list.size(); l++){
+                JSONObject card = new JSONObject();
                 if(lanesFromHttp.containsKey(mapEntry.getKey())){
                     //System.out.println("Found in IF statment: "+j+++"\n");
                     Map lane = (Map)lanesFromHttp.get(mapEntry.getKey());
                     Task task = (Task)list.get(l);
-                    Map LaneTask = new HashMap();
-                    LaneTask.put(lane.get("Id"),task);
-                    tareasALean.put(task.getID(),LaneTask);
+                    //System.out.println("TaskName: "+task.getName());
 
                     SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yyy");
                     //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),ft.format(task.getStart()));
@@ -74,17 +72,15 @@ public class ProjectToLeanKit {
                     card.put("BlockReason","null");
                     card.put("StartDate",ft.format(task.getStart()).toString());
                     card.put("DueDate",ft.format(task.getFinish()).toString());
-                    
+                    System.out.println(card.toString(2));
                     
                     cards.put(card);
                 }
             }
 	}
+                
+        System.out.println("Cards JSON: "+cards.toString(3));
         
-        System.out.println("Tareas a Lean: "+tareasALean.size());
-        
-        System.out.println("Cards JSON: "+cards.toString());
-        
-        hr.addCards(domain,boardId,cards);
+        //hr.addCards(domain,boardId,cards);
     }
 }
