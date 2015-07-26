@@ -80,7 +80,7 @@ public class ProjectToLeanKit {
         
         System.out.println("Tareas a Lean: "+tareasALean.size());
         
-        //System.out.println("Cards JSON: "+cards.toString());
+        System.out.println("Cards JSON: "+cards.toString());
         
         
         //JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",cards);
