@@ -6,13 +6,15 @@ import net.sf.mpxj.MPXJException;
 import net.sf.mpxj.ProjectFile;
 import net.sf.mpxj.Task;
 import net.sf.mpxj.mpp.MPPReader;
+import org.apache.commons.collections4.map.MultiValueMap;
+
 /**
  *
  * @author Angel
  */
 public class MppH {
     
-    Map tareasHijas = new HashMap();
+    MultiValueMap tareasHijas = new MultiValueMap();
     
     public Map readMPP(String filename) throws MPXJException{
         ClassLoader loader = MppH.class.getClassLoader();
@@ -43,23 +45,25 @@ public class MppH {
         System.out.println();
     }
 
-    private int listHierarchy(Task task, String indent,int level, String trace){
-        int contTareasHijas=0, childFound=0;
+    private void listHierarchy(Task task, String indent,int level, String trace){
+        int contTareasHijas=0;
+        
         for (Task child : task.getChildTasks()){
-            if(trace!="" && childFound==0) trace = trace+":"+task.getName();
-            if(trace=="" && childFound==0) trace = trace+task.getName();
-            //System.out.println(indent +""+level+" Task: " + child.getName());
+            if(trace!="") trace = trace+":"+task.getName();
+            else trace = trace+task.getName();
+            
+            trace = Cadenas.remvoverAnidados(trace);
+            System.out.println(indent +""+level+" Task: " + child.getName());
             contTareasHijas++;
-            childFound = listHierarchy(child, indent + "\t",level+1,trace);
+            listHierarchy(child, indent + "\t",level+1,trace);
         }
         
         if (contTareasHijas==0){
             String tmp = trace.toLowerCase();
             tmp = tmp.substring(tmp.indexOf(':')+1);
             tmp = tmp.substring(tmp.indexOf(':')+1);
-            //System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
+            System.out.println(indent+"La tarea "+task.getName()+" es una tarea 'hoja' con traza: "+tmp);
             tareasHijas.put(tmp,task);
         }
-        return 1;
     }
 }
