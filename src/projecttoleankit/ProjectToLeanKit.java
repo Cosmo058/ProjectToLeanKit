@@ -9,14 +9,12 @@ import net.sf.mpxj.MPXJException;
 import net.sf.mpxj.Task;
 import org.json.JSONArray;
 import org.json.JSONObject;
-/**
- *
- * @author angel
- */
+
+
 public class ProjectToLeanKit {
     public static void main(String[] args) throws MPXJException, Exception{
         String domain = "cosmodev";
-        String boardId = "226191022";
+        String boardId = "226201132"; // Test3
         String filename = "sgd.mpp";
         JSONArray cards = new JSONArray();
         
@@ -27,20 +25,23 @@ public class ProjectToLeanKit {
         
         MppH mp = new MppH();
         Map tareasHijas = mp.readMPP(filename);
-        System.out.println("Total de tareas hijas: "+tareasHijas.size()+"\n\n");
+        System.out.println("Total de tareas 'hojas': "+tareasHijas.size()+"\n\n");
         
         
         HttpRequest hr = new HttpRequest();
-        JSONObject jObj = hr.sendGet(domain,boardId,"GetBoardIdentifiers");
-        Map lanesFromHttp = JsonManager.distincGetLanes(jObj,"Lanes");
-        System.out.println("Total de lanes: "+lanesFromHttp.size());
+        JSONObject boardIdentifiers = hr.sendGet(domain,boardId,"GetBoardIdentifiers");
+        Map lanesFromHttp = JsonManager.distincGetLanes(boardIdentifiers);
+        System.out.println("Total de lanes 'hojas': "+lanesFromHttp.size());
         
-        Map cardTypesFromHttp = JsonManager.getLanes(jObj,"CardTypes");
+        Map cardTypesFromHttp = JsonManager.getCardTypes(boardIdentifiers);
         //System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
-        
         Map CardType =(Map)cardTypesFromHttp.get("Other Work");
         int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
         //System.out.println("OtherWorkID: "+OtherWorkID);
+        
+        Map prioritiesFromHttp = JsonManager.getPriorities(boardIdentifiers);
+        Map priority = (Map)prioritiesFromHttp.get("Normal");
+        int NormalPriorityID = Integer.parseInt(priority.get("Id").toString());
         
         
         Map tareasALean = new HashMap();
@@ -68,6 +69,7 @@ public class ProjectToLeanKit {
                     card.put("LaneId",lane.get("Id"));
                     card.put("Title",task.getName());
                     card.put("TypeID",OtherWorkID);
+                    card.put("Priority",NormalPriorityID);
                     card.put("IsBlocked","false");
                     card.put("BlockReason","null");
                     card.put("StartDate",ft.format(task.getStart()).toString());
@@ -81,31 +83,8 @@ public class ProjectToLeanKit {
         
         System.out.println("Tareas a Lean: "+tareasALean.size());
         
-        //System.out.println("Cards JSON: "+cards.toString());
-        int totalRequest = 1;
-        Map cardsSplitForRequest = new HashMap();
+        System.out.println("Cards JSON: "+cards.toString());
         
-        if(cards.length() > 100){
-            if(cards.length() % 100 != 0){
-                totalRequest = (int)(cards.length()/100L)+1;
-            }else{
-                totalRequest = (int)(cards.length()/100L);
-            }
-        }
-        
-        for(int contador =0; contador<totalRequest;contador++){
-            JSONArray tmp = new JSONArray();
-            for(int contador2=0; contador2<100;contador2++){
-                if(contador2+(contador*100)<=cards.length()-1)
-                    tmp.put(cards.get(contador2+(contador*100)));
-            }
-            cardsSplitForRequest.put(contador,tmp);
-        }
-        
-        
-        for(int contador = 0; contador<totalRequest;contador++){
-            JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",(JSONArray)cardsSplitForRequest.get(contador));
-            System.out.println("AddCardsResponse: "+JsonManager.JSONPrettyPrint(addCardsResponse.toString()));
-        }
+        hr.addCards(domain,boardId,cards);
     }
 }

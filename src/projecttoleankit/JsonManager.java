@@ -11,14 +11,12 @@ import org.json.JSONObject;
 
 
 public class JsonManager {
-    public static Map getLanes(JSONObject JObject,String dataToShow) throws Exception{
+    public static Map getLanes(JSONObject boardIdentifiersInJSONFormat) throws Exception{
         Map lanesFromHttp = new HashMap();
         
-        //arrays values: "Lanes","ClassesOfService","LaneClassType","BoardId"
-        //               "LaneType","Prorities","BoardUsers","BoardStatistics","CardTypes"
-        JSONArray jsonArray1 = JObject.getJSONArray("ReplyData");
+        JSONArray jsonArray1 = boardIdentifiersInJSONFormat.getJSONArray("ReplyData");
         JSONObject lanesObject = jsonArray1.getJSONObject(0);
-        JSONArray jsonArray = lanesObject.getJSONArray(dataToShow);
+        JSONArray jsonArray = lanesObject.getJSONArray("Lanes");
         
         //System.out.println("LanesLength: "+jsonArray.length());
         
@@ -43,12 +41,12 @@ public class JsonManager {
         return lanesFromHttp;
     }
     
-    public static Map distincGetLanes(JSONObject JObject,String dataToShow) throws Exception{
+    public static Map distincGetLanes(JSONObject boardIdentifiersInJSONFormat) throws Exception{
         Map lanesFromHttp = new HashMap();
         
-        JSONArray jsonArray1 = JObject.getJSONArray("ReplyData");
+        JSONArray jsonArray1 = boardIdentifiersInJSONFormat.getJSONArray("ReplyData");
         JSONObject lanesObject = jsonArray1.getJSONObject(0);
-        JSONArray jsonArray = lanesObject.getJSONArray(dataToShow);
+        JSONArray jsonArray = lanesObject.getJSONArray("Lanes");
         
         //System.out.println("LanesLength: "+jsonArray.length());
         
@@ -88,6 +86,68 @@ public class JsonManager {
                 System.out.println("Lane repetido");
             }else
                 lanesFromHttp.put(lane.get("Name"),lane);
+        }
+        
+        return lanesFromHttp;
+    }
+    
+    public static Map getCardTypes(JSONObject boardIdentifiersInJSONFormat) throws Exception{
+        Map lanesFromHttp = new HashMap();
+        
+        //arrays values: "Lanes","ClassesOfService","LaneClassType","BoardId"
+        //               "LaneType","Prorities","BoardUsers","BoardStatistics","CardTypes"
+        JSONArray jsonArray1 = boardIdentifiersInJSONFormat.getJSONArray("ReplyData");
+        JSONObject lanesObject = jsonArray1.getJSONObject(0);
+        JSONArray jsonArray = lanesObject.getJSONArray("CardTypes");
+        
+        //System.out.println("LanesLength: "+jsonArray.length());
+        
+        for (int i = 0, size = jsonArray.length(); i < size; i++){
+            JSONObject objectInArray = jsonArray.getJSONObject(i);
+            //Crear el objeto Lane
+            Map lane = new HashMap();
+            
+            String[] elementNames = JSONObject.getNames(objectInArray);
+            //System.out.printf("%d ELEMENTS IN CURRENT OBJECT:\n", elementNames.length);
+            for (String elementName : elementNames){
+                //Setear los atributos de cada Lane
+                String value = ""+objectInArray.get(elementName);
+                //System.out.printf("name=%s, value=%s\n", elementName, value);
+                lane.put(elementName,objectInArray.get(elementName));
+            }
+            
+            lanesFromHttp.put(lane.get("Name"),lane);
+            //System.out.println("put numero: "+i);
+        }
+        
+        return lanesFromHttp;
+    }
+    
+    public static Map getPriorities(JSONObject boardIdentifiersInJSONFormat) throws Exception{
+        Map lanesFromHttp = new HashMap();
+        
+        JSONArray jsonArray1 = boardIdentifiersInJSONFormat.getJSONArray("ReplyData");
+        JSONObject lanesObject = jsonArray1.getJSONObject(0);
+        JSONArray jsonArray = lanesObject.getJSONArray("Priorities");
+        
+        //System.out.println("LanesLength: "+jsonArray.length());
+        
+        for (int i = 0, size = jsonArray.length(); i < size; i++){
+            JSONObject objectInArray = jsonArray.getJSONObject(i);
+            //Crear el objeto Lane
+            Map lane = new HashMap();
+            
+            String[] elementNames = JSONObject.getNames(objectInArray);
+            //System.out.printf("%d ELEMENTS IN CURRENT OBJECT:\n", elementNames.length);
+            for (String elementName : elementNames){
+                //Setear los atributos de cada Lane
+                String value = ""+objectInArray.get(elementName);
+                //System.out.printf("name=%s, value=%s\n", elementName, value);
+                lane.put(elementName,objectInArray.get(elementName));
+            }
+            
+            lanesFromHttp.put(lane.get("Name"),lane);
+            //System.out.println("put numero: "+i);
         }
         
         return lanesFromHttp;
