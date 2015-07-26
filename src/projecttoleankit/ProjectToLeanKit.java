@@ -82,9 +82,30 @@ public class ProjectToLeanKit {
         System.out.println("Tareas a Lean: "+tareasALean.size());
         
         //System.out.println("Cards JSON: "+cards.toString());
+        int totalRequest = 1;
+        Map cardsSplitForRequest = new HashMap();
+        
+        if(cards.length() > 100){
+            if(cards.length() % 100 != 0){
+                totalRequest = (int)(cards.length()/100L)+1;
+            }else{
+                totalRequest = (int)(cards.length()/100L);
+            }
+        }
+        
+        for(int contador =0; contador<totalRequest;contador++){
+            JSONArray tmp = new JSONArray();
+            for(int contador2=0; contador2<100;contador2++){
+                if(contador2+(contador*100)<=cards.length()-1)
+                    tmp.put(cards.get(contador2+(contador*100)));
+            }
+            cardsSplitForRequest.put(contador,tmp);
+        }
         
         
-        JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",cards);
-        System.out.println("AddCardsResponse: "+JsonManager.JSONPrettyPrint(addCardsResponse.toString()));
+        for(int contador = 0; contador<totalRequest;contador++){
+            JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",(JSONArray)cardsSplitForRequest.get(contador));
+            System.out.println("AddCardsResponse: "+JsonManager.JSONPrettyPrint(addCardsResponse.toString()));
+        }
     }
 }
