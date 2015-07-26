@@ -1,5 +1,10 @@
 package projecttoleankit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,7 +19,7 @@ import org.json.JSONObject;
 public class ProjectToLeanKit {
     public static void main(String[] args) throws MPXJException, Exception{
         String domain = "cosmodev";
-        String boardId = "225790183";
+        String boardId = "226196671";
         String filename = "sgd.mpp";
         JSONArray cards = new JSONArray();
         
@@ -33,6 +38,13 @@ public class ProjectToLeanKit {
         Map lanesFromHttp = JsonManager.JsonIter(jObj,"Lanes");
         System.out.println("Total de lanes: "+lanesFromHttp.size());
         
+        Map cardTypesFromHttp = JsonManager.JsonIter(jObj,"CardTypes");
+        System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
+        
+        Map CardType =(Map)cardTypesFromHttp.get("Other Work");
+        int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
+        System.out.println("OtherWorkID: "+OtherWorkID);
+        
         
         Map tareasALean = new HashMap();
         Iterator iterator = tareasHijas.entrySet().iterator();
@@ -50,11 +62,17 @@ public class ProjectToLeanKit {
                 LaneTask.put(lane.get("Id"),task);
                 tareasALean.put(task.getID(),LaneTask);
                 
-                System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),task.getType());
+                SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yyy");
+                //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),ft.format(task.getStart()));
                 
                 card.put("LaneId",lane.get("Id"));
                 card.put("Title",task.getName());
-                card.put("Description","");
+                card.put("TypeID",OtherWorkID);
+                card.put("IsBlocked","false");
+                card.put("BlockReason","null");
+                card.put("StartDate",ft.format(task.getStart()).toString());
+                card.put("DueDate",ft.format(task.getFinish()).toString());
+                
                         
                 cards.put(card);
             }
@@ -62,7 +80,10 @@ public class ProjectToLeanKit {
         
         System.out.println("Tareas a Lean: "+tareasALean.size());
         
-        System.out.println("Cards JSON: "+cards.toString());
-        //hr.sendPost("cosmodev","225790183","AddCards?wipOverrideComment={comment}",cards);
+        //System.out.println("Cards JSON: "+cards.toString());
+        
+        
+        //JSONObject addCardsResponse = hr.sendPost("cosmodev",boardId,"AddCards",cards);
+        //System.out.println("AddCardsResponse: "+JsonManager.JSONPrettyPrint(addCardsResponse.toString()));
     }
 }

@@ -1,5 +1,9 @@
 package projecttoleankit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONArray;
@@ -37,5 +41,12 @@ public class JsonManager {
         }
         
         return lanesFromHttp;
+    }
+    
+    public static String JSONPrettyPrint(String JSONString){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(JSONString);
+        return gson.toJson(je);
     }
 }
