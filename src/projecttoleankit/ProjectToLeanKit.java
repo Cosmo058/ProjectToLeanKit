@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import net.sf.mpxj.MPXJException;
 import net.sf.mpxj.Task;
 import org.apache.commons.collections4.map.MultiValueMap;
@@ -13,10 +14,44 @@ import org.json.JSONObject;
 
 public class ProjectToLeanKit {
     public static void main(String[] args) throws MPXJException, Exception{
+        Scanner keyboard = new Scanner(System.in);
+        
         String domain = "cosmodev";
-        String boardId = "226201132"; // Test3
+        String user = "cosmodevtest@gmail.com";
+        String password = "CosmoTest";
+        String boardId = "226196690"; // Test4
         String filename = "sgd.mpp";
-        JSONArray cards = new JSONArray();
+        
+        System.out.println("Ingrese el dominio de su cuenta");
+        System.out.println("[Si la URL de su cuenta es <https://myaccount.leankit.com> su dominio sera \"myaccount\" (sin las comillas)]");
+        System.out.print("Dominio: ");
+        //domain = keyboard.nextLine();
+        System.out.println("");
+        
+        System.out.print("Ingrese su usuario de LeanKit: ");
+        //user = keyboard.nextLine();
+        System.out.println("");
+        
+        System.out.print("Ingrese su contrasenia de LeanKit:");
+        //password = keyboard.nextLine();
+        System.out.println("");
+        
+        HttpRequest hr = new HttpRequest(user,password);
+        
+        
+        JSONObject boardsInJSONFormat = hr.getBoards(domain);
+        Map boards = JsonManager.getBoardsId(boardsInJSONFormat);
+        
+        System.out.println("Seleccione el numero del tablero(board) donde subir las 'cards': ");
+        for(int contador = 0; contador<boards.size();contador++){
+            Map temp = (Map)boards.get(contador);
+            System.out.println("\t["+(contador+1)+"] Nombre: "+temp.get("Title"));
+        }
+        
+        int indice = keyboard.nextInt() - 1;
+        Map board = (Map)boards.get(indice);
+        boardId = board.get("Id").toString();
+        
         
         ClassLoader loader = ProjectToLeanKit.class.getClassLoader();
         String path = loader.getResource("projecttoleankit/files/").toString();
@@ -25,14 +60,13 @@ public class ProjectToLeanKit {
         
         MppH mp = new MppH();
         MultiValueMap tareasHijas = mp.readMPP(path,filename);
-        System.out.println("Total de tareas 'hojas': "+tareasHijas.size()+"\n\n");
+        //System.out.println("Total de tareas 'hojas': "+tareasHijas.size()+"\n\n");
         //System.out.println("Treas hijas: "+tareasHijas);
         
         
-        HttpRequest hr = new HttpRequest();
         JSONObject boardIdentifiers = hr.sendGet(domain,boardId,"GetBoardIdentifiers");
         Map lanesFromHttp = JsonManager.distincGetLanes(boardIdentifiers);
-        System.out.println("Total de lanes 'hojas': "+lanesFromHttp.size());
+        //System.out.println("Total de lanes 'hojas': "+lanesFromHttp.size());
         
         Map cardTypesFromHttp = JsonManager.getCardTypes(boardIdentifiers);
         //System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
@@ -44,7 +78,7 @@ public class ProjectToLeanKit {
         Map priority = (Map)prioritiesFromHttp.get("Normal");
         int NormalPriorityID = Integer.parseInt(priority.get("Id").toString());
         
-        
+        JSONArray cards = new JSONArray();
         List list;
         Iterator iterator = tareasHijas.entrySet().iterator();
         int k=0,j=0;
@@ -72,7 +106,7 @@ public class ProjectToLeanKit {
                     card.put("BlockReason","null");
                     card.put("StartDate",ft.format(task.getStart()).toString());
                     card.put("DueDate",ft.format(task.getFinish()).toString());
-                    System.out.println(card.toString(2));
+                    //System.out.println(card.toString(2));
                     
                     cards.put(card);
                 }

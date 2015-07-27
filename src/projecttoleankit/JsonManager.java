@@ -41,6 +41,28 @@ public class JsonManager {
         return lanesFromHttp;
     }
     
+    public static Map getBoardsId(JSONObject boardsInJSONFormat) throws Exception{
+        Map boards = new HashMap();
+        
+        JSONArray ja = (JSONArray) boardsInJSONFormat.get("ReplyData");
+        ja = ja.getJSONArray(0);
+        //System.out.println(ja.toString(3));
+                
+        for (int i = 0, size = ja.length(); i < size; i++){
+            JSONObject objectInArray = ja.getJSONObject(i);
+            
+            Map board = new HashMap();
+            String[] elementNames = JSONObject.getNames(objectInArray);
+            for (String elementName : elementNames){
+                board.put(elementName,objectInArray.get(elementName));
+            }
+            
+            boards.put(i,board);
+        }
+        
+        return boards;
+    }
+    
     public static Map distincGetLanes(JSONObject boardIdentifiersInJSONFormat) throws Exception{
         Map lanesFromHttp = new HashMap();
         
