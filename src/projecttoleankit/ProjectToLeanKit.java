@@ -13,7 +13,13 @@ import org.json.JSONObject;
 
 
 public class ProjectToLeanKit {
+    
+    //Uso del programa:
+    //  java.jar -jar ProjectToLeanKit.jar <fileName.extension>
+    //
+    //El archivo debe estar en el mismo directorio que el archivo jar
     public static void main(String[] args) throws MPXJException, Exception{
+        boolean debug = true;
         Scanner keyboard = new Scanner(System.in);
         
         String domain = "cosmodev";
@@ -21,6 +27,11 @@ public class ProjectToLeanKit {
         String password = "CosmoTest";
         String boardId = "226196690"; // Test4
         String filename = "sgd.mpp";
+        
+        if(args.length!=0){
+            debug = false;
+            filename = args[0];
+        }
         
         System.out.println("Ingrese el dominio de su cuenta");
         System.out.println("[Si la URL de su cuenta es <https://myaccount.leankit.com> su dominio sera \"myaccount\" (sin las comillas)]");
@@ -53,10 +64,16 @@ public class ProjectToLeanKit {
         boardId = board.get("Id").toString();
         
         
-        ClassLoader loader = ProjectToLeanKit.class.getClassLoader();
-        String path = loader.getResource("projecttoleankit/files/").toString();
-        path = path.substring(6);
-        //System.out.println("PATH:"+path);
+        String path = "";
+        if(debug){
+            ClassLoader loader = ProjectToLeanKit.class.getClassLoader();
+            path = loader.getResource("projecttoleankit/files/").toString();
+            path = path.substring(6);
+            //System.out.println("PATH:"+path);
+        }else{
+            path = ProjectToLeanKit.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            path = path.substring(0,path.lastIndexOf("/")+1);
+        }
         
         MppH mp = new MppH();
         MultiValueMap tareasHijas = mp.readMPP(path,filename);
