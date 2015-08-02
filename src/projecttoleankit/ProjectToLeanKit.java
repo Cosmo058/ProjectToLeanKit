@@ -33,18 +33,20 @@ public class ProjectToLeanKit {
             filename = args[0];
         }
         
+        if(debug) System.out.println("DEBUG MODE");
+        
         System.out.println("Ingrese el dominio de su cuenta");
         System.out.println("[Si la URL de su cuenta es <https://myaccount.leankit.com> su dominio sera \"myaccount\" (sin las comillas)]");
         System.out.print("Dominio: ");
-        //domain = keyboard.nextLine();
+        if(!debug) domain = keyboard.nextLine();
         System.out.println("");
         
         System.out.print("Ingrese su usuario de LeanKit: ");
-        //user = keyboard.nextLine();
+        if(!debug) user = keyboard.nextLine();
         System.out.println("");
         
         System.out.print("Ingrese su contrasenia de LeanKit:");
-        //password = keyboard.nextLine();
+        if(!debug) password = keyboard.nextLine();
         System.out.println("");
         
         HttpRequest hr = new HttpRequest(user,password);
@@ -132,6 +134,6 @@ public class ProjectToLeanKit {
                 
         System.out.println("Cards JSON: "+cards.toString(3));
         
-        //hr.addCards(domain,boardId,cards);
+        if(!debug) hr.addCards(domain,boardId,cards);
     }
 }
