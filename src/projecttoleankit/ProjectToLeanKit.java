@@ -15,7 +15,7 @@ import org.json.JSONObject;
 public class ProjectToLeanKit {
     
     //Uso del programa:
-    //  java.jar -jar ProjectToLeanKit.jar <fileName.extension>
+    //  java -jar ProjectToLeanKit.jar <fileName.extension>
     //
     //El archivo debe estar en el mismo directorio que el archivo jar
     public static void main(String[] args) throws MPXJException, Exception{
