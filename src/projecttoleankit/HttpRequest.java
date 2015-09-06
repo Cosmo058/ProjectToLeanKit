@@ -122,7 +122,7 @@ public class HttpRequest {
         con.setDoOutput(true);
         con.setRequestMethod("POST");
         con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Content-Type", "application/json; charset=utf-");
+        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         con.addRequestProperty("User-Agent","LeanKit API");
 
         String urlParameters = jsonArray.toString();
