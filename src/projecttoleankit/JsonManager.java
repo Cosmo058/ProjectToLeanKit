@@ -105,7 +105,8 @@ public class JsonManager {
             if(ultimoNivel.equals(penultimoNivel)){
                 //Es un lane anidado
                 lanesFromHttp.put(laneSuperior,lane);
-                //System.out.println("Lane repetido");
+                //System.out.print("Lane repetido");
+                //System.out.println(lane.toString() +" "+laneSuperior);
             }else
                 lanesFromHttp.put(lane.get("Name"),lane);
         }

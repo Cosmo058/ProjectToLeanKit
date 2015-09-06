@@ -22,11 +22,11 @@ public class ProjectToLeanKit {
         boolean debug = true;
         Scanner keyboard = new Scanner(System.in);
         
-        String domain = "cosmodev";
-        String user = "cosmodevtest@gmail.com";
-        String password = "CosmoTest";
-        String boardId = "226196690"; // Test4
-        String filename = "sgd.mpp";
+        String domain = "development058";
+        String user = "angelsanchez058@outlook.com";
+        String password = "@t1@ng37";
+        String boardId = "240886334"; // Test4
+        String filename = "scd.mpp";
         
         if(args.length!=0){
             debug = false;
@@ -86,6 +86,7 @@ public class ProjectToLeanKit {
         JSONObject boardIdentifiers = hr.sendGet(domain,boardId,"GetBoardIdentifiers");
         Map lanesFromHttp = JsonManager.distincGetLanes(boardIdentifiers);
         //System.out.println("Total de lanes 'hojas': "+lanesFromHttp.size());
+        //System.out.println(boardIdentifiers.toString(3));
         
         Map cardTypesFromHttp = JsonManager.getCardTypes(boardIdentifiers);
         //System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
@@ -117,7 +118,7 @@ public class ProjectToLeanKit {
                     SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yyy");
                     //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),ft.format(task.getStart()));
 
-                    card.put("LaneId",lane.get("Id"));
+                    if(task.getPriority().getValue() != 999 ) card.put("LaneId",lane.get("Id"));
                     card.put("Title",task.getName());
                     card.put("TypeID",OtherWorkID);
                     card.put("Priority",NormalPriorityID);
@@ -132,7 +133,7 @@ public class ProjectToLeanKit {
             }
 	}
                 
-        System.out.println("Cards JSON: "+cards.toString(3));
+        //System.out.println("Cards JSON: "+cards.toString(3));
         
         if(!debug) hr.addCards(domain,boardId,cards);
     }
