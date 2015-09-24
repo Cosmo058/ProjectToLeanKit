@@ -29,23 +29,23 @@ public class ProjectToLeanKit {
         String filename = "scd.mpp";
         
         if(args.length!=0){
-            debug = false;
+            debug = true;
             filename = args[0];
         }
         
-        if(debug) System.out.println("DEBUG MODE");
+        //if(debug) System.out.println("DEBUG MODE");
         
         System.out.println("Ingrese el dominio de su cuenta");
         System.out.println("[Si la URL de su cuenta es <https://myaccount.leankit.com> su dominio sera \"myaccount\" (sin las comillas)]");
-        System.out.print("Dominio: ");
+        System.out.print("Dominio: iibiUNAM");
         if(!debug) domain = keyboard.nextLine();
         System.out.println("");
         
-        System.out.print("Ingrese su usuario de LeanKit: ");
+        System.out.print("Ingrese el correo electronico asociado a la cuenta de LeanKit: dafne@iibi.unam.mx");
         if(!debug) user = keyboard.nextLine();
         System.out.println("");
         
-        System.out.print("Ingrese su contrasenia de LeanKit:");
+        System.out.print("Ingrese su contrasenia de LeanKit: iibi2015_");
         if(!debug) password = keyboard.nextLine();
         System.out.println("");
         
@@ -55,15 +55,17 @@ public class ProjectToLeanKit {
         JSONObject boardsInJSONFormat = hr.getBoards(domain);
         Map boards = JsonManager.getBoardsId(boardsInJSONFormat);
         
-        System.out.println("Seleccione el numero del tablero(board) donde subir las 'cards': ");
+        System.out.println("\nSeleccione el numero del tablero(board) donde subir las 'cards': ");
         for(int contador = 0; contador<boards.size();contador++){
             Map temp = (Map)boards.get(contador);
             System.out.println("\t["+(contador+1)+"] Nombre: "+temp.get("Title"));
         }
         
+        System.out.print("Tablero numero: ");
+        
         int indice = keyboard.nextInt() - 1;
-        Map board = (Map)boards.get(indice);
-        boardId = board.get("Id").toString();
+        //Map board = (Map)boards.get(indice);
+        //boardId = board.get("Id").toString();
         
         
         String path = "";
@@ -77,6 +79,7 @@ public class ProjectToLeanKit {
             path = path.substring(0,path.lastIndexOf("/")+1);
         }
         
+        /*
         MppH mp = new MppH();
         MultiValueMap tareasHijas = mp.readMPP(path,filename);
         //System.out.println("Total de tareas 'hojas': "+tareasHijas.size()+"\n\n");
@@ -136,5 +139,19 @@ public class ProjectToLeanKit {
         //System.out.println("Cards JSON: "+cards.toString(3));
         
         if(!debug) hr.addCards(domain,boardId,cards);
+        */
+        String dummy = "";
+        
+        System.out.println("\nEl proyecto parece tener 2 etapas principales");
+        System.out.println("\t1. Análisis documentales");
+        System.out.println("\t2. Sistema de gestión de documentos");
+        System.out.println("\nQue accion desea tomar?:");
+        System.out.println("\t[1] Subir las tarjetas a la aplicacion LeanKit respetando las dos etapas");
+        System.out.println("\t[2] Subir las tarjetas a la aplicacion LeanKit utilizando un tablero KanBan simple");
+        System.out.print("\tRespuesta: ");
+        keyboard.nextLine(); dummy = keyboard.nextLine();
+        System.out.print("\nIngrese el nombre del carril destinado a las tareas pendientes: ");
+        dummy = keyboard.nextLine();
+        System.out.println("\n\nLas tarjetas se han agregado correctamente");
     }
 }
