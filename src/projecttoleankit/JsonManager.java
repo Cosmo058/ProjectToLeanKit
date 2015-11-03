@@ -11,8 +11,9 @@ import org.json.JSONObject;
 
 
 public class JsonManager {
-    public static Map getLanes(JSONObject boardIdentifiersInJSONFormat) throws Exception{
+    public static Map getLanes(JSONObject boardIdentifiersInJSONFormat,String toDo) throws Exception{
         Map lanesFromHttp = new HashMap();
+        int etapa = 1;
         
         JSONArray jsonArray1 = boardIdentifiersInJSONFormat.getJSONArray("ReplyData");
         JSONObject lanesObject = jsonArray1.getJSONObject(0);
@@ -34,8 +35,18 @@ public class JsonManager {
                 lane.put(elementName,objectInArray.get(elementName));
             }
             
-            lanesFromHttp.put(lane.get("Name"),lane);
-            //System.out.println("put numero: "+i);
+            //System.out.println("Lane "+lane.toString());
+            String nombreLane = lane.get("Name").toString();
+            
+            if(nombreLane.contains(":")){
+                nombreLane = nombreLane.substring(nombreLane.indexOf(":")+1,nombreLane.length());
+            }
+            
+            //System.out.println("nombreLane: "+nombreLane);
+            if(nombreLane.equals(toDo.toLowerCase())){
+                lanesFromHttp.put(etapa++,lane);
+                //System.out.println("Lane "+lane.toString()+"\n\n");
+            }
         }
         
         return lanesFromHttp;
