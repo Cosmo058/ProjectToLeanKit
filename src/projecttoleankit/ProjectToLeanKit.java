@@ -95,8 +95,11 @@ public class ProjectToLeanKit {
         //System.out.println(lanesFromHttp.toString());
         
         Map cardTypesFromHttp = JsonManager.getCardTypes(boardIdentifiers);
-        //System.out.println("CardTypes: "+new PrettyPrintingMap<String, String>(cardTypesFromHttp));
-        Map CardType =(Map)cardTypesFromHttp.get("Other Work");
+        System.out.println("CardTypes: "+cardTypesFromHttp.toString());
+        Map CardType =(Map)cardTypesFromHttp.get(1);
+        
+        System.out.println("CardType "+cardTypesFromHttp.get(2));
+        
         int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
         //System.out.println("OtherWorkID: "+OtherWorkID);
         
@@ -133,7 +136,7 @@ public class ProjectToLeanKit {
 	while (iterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) iterator.next();
             list = (List) tareasHijas.get(mapEntry.getKey()); 
-            //System.out.println("\n\nThe key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
+            System.out.println("\n\nThe key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
             
             for (int l = 0; l < list.size(); l++){
                 JSONObject card = new JSONObject();
@@ -161,7 +164,9 @@ public class ProjectToLeanKit {
                         card.put("LaneId",lane.get("Id"));
                     
                     card.put("Title",task.getName());
-                    card.put("TypeID",OtherWorkID);
+                    
+                    CardType =(Map)cardTypesFromHttp.get(Integer.parseInt(mapEntry.getKey().toString()));
+                    card.put("TypeID",Integer.parseInt(CardType.get("Id").toString()));
                     card.put("Priority",NormalPriorityID);
                     card.put("IsBlocked","false");
                     card.put("BlockReason","null");
@@ -176,6 +181,6 @@ public class ProjectToLeanKit {
                 
         //System.out.println("Cards JSON: "+cards.toString(3));
         
-        if(debug) hr.addCards(domain,boardId,cards);
+        if(!debug) hr.addCards(domain,boardId,cards);
     }
 }

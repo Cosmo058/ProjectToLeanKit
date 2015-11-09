@@ -127,6 +127,7 @@ public class JsonManager {
     
     public static Map getCardTypes(JSONObject boardIdentifiersInJSONFormat) throws Exception{
         Map lanesFromHttp = new HashMap();
+        int index = 2;
         
         //arrays values: "Lanes","ClassesOfService","LaneClassType","BoardId"
         //               "LaneType","Prorities","BoardUsers","BoardStatistics","CardTypes"
@@ -150,7 +151,10 @@ public class JsonManager {
                 lane.put(elementName,objectInArray.get(elementName));
             }
             
-            lanesFromHttp.put(lane.get("Name"),lane);
+            if(lane.get("Name").toString().equals("Other Work"))
+                lanesFromHttp.put(1,lane);
+            else
+                lanesFromHttp.put(index++,lane);
             //System.out.println("put numero: "+i);
         }
         
