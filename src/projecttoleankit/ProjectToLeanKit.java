@@ -23,11 +23,11 @@ public class ProjectToLeanKit {
         boolean leanSimple = false;
         Scanner keyboard = new Scanner(System.in);
         
-        String domain = "iibiunam";
-        String user = "iibi.unam.test@gmail.com";
-        String password = "lEa097132";
+        String domain = "iibi2";
+        String user = "jun-a266@hotmail.com";
+        String password = "@t1@ng32";
         String boardId = "240886334"; // Test4
-        String filename = "sigedda.mpp";
+        String filename = "sgd.mpp";
         String toDo = "ToDo";
         int respuesta = 1;
         
@@ -153,19 +153,26 @@ public class ProjectToLeanKit {
                         lane = (Map)lanesFromHttp.get(mapEntry.getKey());
                     
                     Task task = (Task)list.get(l);
-                    //System.out.println("TaskName: "+task.getName());
+                    System.out.println("TaskName: "+task.getName());
 
                     SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yyy");
                     //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),ft.format(task.getStart()));
 
-                    if(leanSimple)
+                    if(leanSimple){
+                        System.out.println("if lean simple");
                         card.put("LaneId",lane.get("Id"));
-                    else
+                    }else{
+                        System.out.println("else lean simple");
                         card.put("LaneId",lane.get("Id"));
+                    }
                     
                     card.put("Title",task.getName());
                     
-                    CardType =(Map)cardTypesFromHttp.get(Integer.parseInt(mapEntry.getKey().toString()));
+                    if(Integer.parseInt(mapEntry.getKey().toString())<=cardTypesFromHttp.size())
+                        CardType =(Map)cardTypesFromHttp.get(Integer.parseInt(mapEntry.getKey().toString()));
+                    else
+                        CardType =(Map)cardTypesFromHttp.get(Integer.parseInt(mapEntry.getKey().toString())-cardTypesFromHttp.size());
+                    
                     card.put("TypeID",Integer.parseInt(CardType.get("Id").toString()));
                     card.put("Priority",NormalPriorityID);
                     card.put("IsBlocked","false");
