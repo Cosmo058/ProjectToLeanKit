@@ -23,9 +23,9 @@ public class ProjectToLeanKit {
         boolean leanSimple = false;
         Scanner keyboard = new Scanner(System.in);
         
-        String domain = "iibi2";
-        String user = "jun-a266@hotmail.com";
-        String password = "@t1@ng32";
+        String domain = "iibiunam";
+        String user = "iibi.unam.test@gmail.com";
+        String password = "lEa097132";
         String boardId = "240886334"; // Test4
         String filename = "sigedda.mpp";
         String toDo = "ToDo";
@@ -98,7 +98,7 @@ public class ProjectToLeanKit {
         System.out.println("CardTypes: "+cardTypesFromHttp.toString());
         Map CardType =(Map)cardTypesFromHttp.get(1);
         
-        System.out.println("CardType "+cardTypesFromHttp.get(2));
+        //System.out.println("CardType "+cardTypesFromHttp.get(2));
         
         int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
         //System.out.println("OtherWorkID: "+OtherWorkID);
