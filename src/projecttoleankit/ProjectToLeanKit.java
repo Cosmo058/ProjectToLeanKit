@@ -10,6 +10,7 @@ import net.sf.mpxj.Task;
 import org.apache.commons.collections4.map.MultiValueMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.io.Console;
 
 
 public class ProjectToLeanKit {
@@ -22,6 +23,7 @@ public class ProjectToLeanKit {
         boolean debug = true;
         boolean leanSimple = false;
         Scanner keyboard = new Scanner(System.in);
+        Console console = System.console();
         
         String domain = "iibi2";
         String user = "jun-a266@hotmail.com";
@@ -49,7 +51,10 @@ public class ProjectToLeanKit {
         System.out.println("");
         
         System.out.print("Ingrese su contrasenia de LeanKit: ");
-        if(!debug) password = keyboard.nextLine();
+        if(!debug){
+            char[] passString = console.readPassword();
+            password = new String(passString );
+        }
         System.out.println("");
         
         HttpRequest hr = new HttpRequest(user,password);
@@ -87,6 +92,12 @@ public class ProjectToLeanKit {
         //System.out.println("Total de etapas en mpp: "+tareasHijas.size()+"\n\n");
         //System.out.println("Treas hijas: "+tareasHijas);
         
+        System.out.print("Indique el nombre de los carriles que contendran el trabajo pendiente: ");
+        if(!debug){
+            keyboard.nextLine();
+            toDo = keyboard.nextLine();
+        }
+        System.out.println("");
         
         JSONObject boardIdentifiers = hr.sendGet(domain,boardId,"GetBoardIdentifiers");
         Map lanesFromHttp = JsonManager.getLanes(boardIdentifiers,toDo); ////////////////////////////////////
@@ -95,10 +106,10 @@ public class ProjectToLeanKit {
         //System.out.println(lanesFromHttp.toString());
         
         Map cardTypesFromHttp = JsonManager.getCardTypes(boardIdentifiers);
-        System.out.println("CardTypes: "+cardTypesFromHttp.toString());
+        //System.out.println("CardTypes: "+cardTypesFromHttp.toString());
         Map CardType =(Map)cardTypesFromHttp.get(1);
         
-        //System.out.println("CardType "+cardTypesFromHttp.get(2));
+        if(!debug)System.out.println("CardType "+cardTypesFromHttp.get(2));
         
         int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
         //System.out.println("OtherWorkID: "+OtherWorkID);
@@ -136,7 +147,7 @@ public class ProjectToLeanKit {
 	while (iterator.hasNext()) {
             Map.Entry mapEntry = (Map.Entry) iterator.next();
             list = (List) tareasHijas.get(mapEntry.getKey()); 
-            System.out.println("\n\nThe key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
+            //System.out.println("\n\nThe key is: " + mapEntry.getKey() + ",value is :" + mapEntry.getValue()+" "+k++);
             
             for (int l = 0; l < list.size(); l++){
                 JSONObject card = new JSONObject();
@@ -145,24 +156,24 @@ public class ProjectToLeanKit {
                     Map lane;
                     
                     if(leanSimple){
-                        System.out.println("leanSimple = true");
+                        if(!debug)System.out.println("leanSimple = true");
                         lane = (Map)lanesFromHttp.get(1);
-                        System.out.println(lane.toString());
+                        if(!debug)System.out.println(lane.toString());
                     }
                     else
                         lane = (Map)lanesFromHttp.get(mapEntry.getKey());
                     
                     Task task = (Task)list.get(l);
-                    System.out.println("TaskName: "+task.getName());
+                    if(!debug)System.out.println("TaskName: "+task.getName());
 
                     SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yyy");
                     //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),ft.format(task.getStart()));
 
                     if(leanSimple){
-                        System.out.println("if lean simple");
+                        if(!debug)System.out.println("if lean simple");
                         card.put("LaneId",lane.get("Id"));
                     }else{
-                        System.out.println("else lean simple");
+                        if(!debug)System.out.println("else lean simple");
                         card.put("LaneId",lane.get("Id"));
                     }
                     
@@ -179,7 +190,7 @@ public class ProjectToLeanKit {
                     card.put("BlockReason","null");
                     card.put("StartDate",ft.format(task.getStart()).toString());
                     card.put("DueDate",ft.format(task.getFinish()).toString());
-                    System.out.println(card.toString(2));
+                    if(!debug)System.out.println(card.toString(2));
                     
                     cards.put(card);
                 }
@@ -188,6 +199,7 @@ public class ProjectToLeanKit {
                 
         //System.out.println("Cards JSON: "+cards.toString(3));
         
-        if(!debug) hr.addCards(domain,boardId,cards);
+        if(!debug)
+            hr.addCards(domain,boardId,cards);
     }
 }
