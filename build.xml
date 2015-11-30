@@ -70,4 +70,21 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-jar">
+        <jar jarfile="dist/PtLK.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/commons-codec-1.10.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/commons-collections4-4.0.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/gson-2.3.1.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/json-simple-1.1.1.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/mpxj.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/org.json-20131017.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/poi-3.12-20150511.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/rtfparserkit-1.2.0.jar" excludes="META-INF/*" />
+            
+            <manifest>
+                <attribute name="Main-Class" value="projecttoleankit.ProjectToLeanKit"/>
+            </manifest>
+        </jar>
+    </target>
 </project>

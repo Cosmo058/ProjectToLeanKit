@@ -25,12 +25,12 @@ public class ProjectToLeanKit {
         Scanner keyboard = new Scanner(System.in);
         Console console = System.console();
         
-        String domain = "iibi2";
-        String user = "jun-a266@hotmail.com";
-        String password = "@t1@ng32";
+        String domain = "iibiunam";
+        String user = "iibi.unam.test@gmail.com";
+        String password = "lEa097132";
         String boardId = "240886334"; // Test4
         String filename = "sgd.mpp";
-        String toDo = "ToDo";
+        String toDo = "Por hacer";
         int respuesta = 1;
         
         if(args.length!=0){
@@ -109,7 +109,7 @@ public class ProjectToLeanKit {
         //System.out.println("CardTypes: "+cardTypesFromHttp.toString());
         Map CardType =(Map)cardTypesFromHttp.get(1);
         
-        if(!debug)System.out.println("CardType "+cardTypesFromHttp.get(2));
+        if(debug) System.out.println("CardType "+cardTypesFromHttp.get(2));
         
         int OtherWorkID = Integer.parseInt(CardType.get("Id").toString());
         //System.out.println("OtherWorkID: "+OtherWorkID);
@@ -118,6 +118,8 @@ public class ProjectToLeanKit {
         Map priority = (Map)prioritiesFromHttp.get("Normal");
         int NormalPriorityID = Integer.parseInt(priority.get("Id").toString());
         
+        System.out.println("lanesFromHttp size: "+lanesFromHttp.size());
+        System.out.println("lanesFromHttp: "+lanesFromHttp.toString());
         
         if(tareasHijas.size() == lanesFromHttp.size() && lanesFromHttp.size()>1){
             System.out.println("El tablero en LeanKit y el archivo MicrosoftProject parecen tener "+tareasHijas.size()+" etapas principales");
@@ -135,8 +137,12 @@ public class ProjectToLeanKit {
         }if(tareasHijas.size() == lanesFromHttp.size() && lanesFromHttp.size() == 1){
             leanSimple = true;
         }if(tareasHijas.size() > lanesFromHttp.size()){
+            System.out.println("Existen mas etapas en el archivo de MicrosoftProject que en el tablero de LeanKit");
+            System.out.println("La carga se realizara en un solo carril");
             leanSimple = true;
         }if(tareasHijas.size() < lanesFromHttp.size()){
+            System.out.println("Existen mas etapas en el tablero de LeanKit que en el archivo de Microsoft Project");
+            System.out.println("La carga se realizara dejando carriles vacios en LeanKit");
             leanSimple = false;
         }
         
@@ -156,24 +162,24 @@ public class ProjectToLeanKit {
                     Map lane;
                     
                     if(leanSimple){
-                        if(!debug)System.out.println("leanSimple = true");
-                        lane = (Map)lanesFromHttp.get(1);
-                        if(!debug)System.out.println(lane.toString());
+                        if(debug)System.out.println("leanSimple = true");
+                        lane = (Map)lanesFromHttp.get(2);
+                        if(debug)System.out.println(lane.toString());
                     }
                     else
                         lane = (Map)lanesFromHttp.get(mapEntry.getKey());
                     
                     Task task = (Task)list.get(l);
-                    if(!debug)System.out.println("TaskName: "+task.getName());
+                    if(debug)System.out.println("TaskName: "+task.getName());
 
                     SimpleDateFormat ft = new SimpleDateFormat ("MM/dd/yyy");
                     //System.out.format("Task: %-47s    ID:%-3s    ParentTask:%-75s    TaskType:%-15s\n",task.getName(),task.getID(),task.getParentTask(),ft.format(task.getStart()));
 
                     if(leanSimple){
-                        if(!debug)System.out.println("if lean simple");
+                        if(debug)System.out.println("if lean simple");
                         card.put("LaneId",lane.get("Id"));
                     }else{
-                        if(!debug)System.out.println("else lean simple");
+                        if(debug)System.out.println("else lean simple");
                         card.put("LaneId",lane.get("Id"));
                     }
                     
@@ -190,7 +196,7 @@ public class ProjectToLeanKit {
                     card.put("BlockReason","null");
                     card.put("StartDate",ft.format(task.getStart()).toString());
                     card.put("DueDate",ft.format(task.getFinish()).toString());
-                    if(!debug)System.out.println(card.toString(2));
+                    if(debug)System.out.println(card.toString(2));
                     
                     cards.put(card);
                 }
